@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap" rel="stylesheet">
+    <title>POPCAT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: rgba(0, 162, 255, 0.63);
+            color: white;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        #content {
+            display: grid;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .content {
+            margin-top: 50%;
+            font-size: 25px;
+            font-family: cursive;
+        }
+
+        #gambar2 {
+            display: none;
+        }
+
+        .btn_clear {
+            background-color: transparent;
+            border: none;
+            color: white;
+            position: absolute;
+            margin: 2%;
+            font-family: 'Quicksand', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div id="content">
+            <div class="card_score" style="margin-top: 2%;">
+                <h3>Score : <span class="score_tertinggi"></span> / <span class="score_terbaru"></span></h3>
+            </div>
+
+            <span class="content">
+                <h3 style="margin-top: 20px;">0</h3>
+                <span class="gambar">
+                    <img src="gambar1.png" width="180px" id="gambar1">
+                    <img src="gambar2.png" width="180px" id="gambar2">
+                </span>
+            </span>
+
+            <button class="btn_clear" onclick="clear_button()"><h3>Reset</h3></button>
+        </div>
+    </main>
+
+    <script>
+
+        let score_terbaru = 0;
+        let score_tertinggi = 0;
+
+        const localStorageKey = "SCORE_TERTINGGI";
+
+        // pengecekan apahkah data localstorage dengan key score_tertinggi tersedia / belum
+        if (typeof (Storage) !== 'undefined'){
+            if (localStorage.getItem(localStorageKey) === null){
+                // jika item pada localstorage belum ada
+                // maka akan diberi nilai awal 0
+                localStorage.setItem(localStorageKey, 0);
+            }
+
+            document.querySelector("#gambar1").addEventListener("click", function(){
+                score_terbaru = score_terbaru += 1;
+                document.querySelector(".content h3").innerHTML = score_terbaru;
+
+                //mengambil value dari localstorage
+                let count = localStorage.getItem(localStorageKey);
+                if(count <= score_terbaru){
+                    
+                    count = score_terbaru;
+
+                    localStorage.setItem(localStorageKey, count);
+                }
+
+                const gambar1 = document.querySelector("#gambar1");
+                const gambar2 = document.querySelector("#gambar2");
+
+                gambar1.style.display = "none";
+                gambar2.style.display = "flex";
+
+                setTimeout(function (){
+                    gambar1.style.display = "flex";
+                    gambar2.style.display = "none";
+                }, 100)
+
+                document.querySelector(".score_terbaru").innerHTML = score_terbaru;
+            })
+            document.querySelector(".score_tertinggi").innerHTML = localStorage.getItem(localStorageKey);
+
+            function clear_button(){
+                localStorage.removeItem(localStorageKey);
+                location.reload();
+            }
+        }else {
+            alert("Browser yang anda gunakan tidak support web storage");
+        }
+    </script>
+</body>
+</html>
